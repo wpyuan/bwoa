@@ -1,0 +1,30 @@
+@charset "UTF-8";
+#form-left{
+	
+	position: absolute;
+	left: 150px;	
+}
+
+#form-rigth{	
+	position: absolute;
+	left: 650px;	
+}
+
+#form-button-left{
+	position: absolute;
+	left: 150px;
+	top:  95%;
+}
+
+#form-button-right{
+	position: absolute;
+	top: 75%;
+	left: 650px;
+}
+
+#form-button-tijiao{
+	position: absolute;
+	top: 950px;
+	left: 700px;
+	height: 80px;
+}

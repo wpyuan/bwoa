@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.CityMapper">
+	<!-- 获取所有城市名称相关信息 -->
+	<select id="getAllName" parameterType="int" resultType="String">
+		select name from city where status=#{status}
+	</select>
+	<!-- 获取id通过名字 -->
+	<select id="getIdByName" parameterType="String" resultType="int">
+		select cityId from city where name=#{_parameter}
+	</select>
+	<!-- 通过id获取名字 -->
+	<select id="getNameById" parameterType="int" resultType="String">
+		select name from city where cityId=#{cityId}
+	</select>
+	<!-- 条件查询相关信息 -->
+	<select id="getNamesByCondition" parameterType="String" resultType="String">
+		select name from town where to_char(townId) like '${_parameter}%'
+	</select>
+</mapper>

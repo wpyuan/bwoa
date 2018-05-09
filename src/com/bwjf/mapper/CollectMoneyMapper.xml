@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.CollectMoneyMapper">
+	<!-- 保存服务费部分信息 -->
+	<insert id="addCollectMoney" parameterType="CollectMoney">
+		insert into collectMoney
+		(uuid,revenue,Transfer)
+		values(#{uuid},#{revenue},#{Transfer})
+	</insert>
+	
+	<!-- 获取总金额额， -->
+	<select id="getTotalMoneyByUUID" resultType="double">
+		select sum(revenue) from collectMoney
+		where uuid in
+		 <foreach item="item" index="index" collection="uuids"
+		      open="(" separator="," close=")">
+		        #{item,jdbcType=VARCHAR}
+		 </foreach>
+	</select>
+	
+	<!-- 获取总已转账金额 -->
+	<select id="getTransferMoneyByUUID" resultType="double">
+		select sum(Transfer) from collectMoney
+		where uuid in
+		 <foreach item="item" index="index" collection="uuids"
+		      open="(" separator="," close=")">
+		        #{item,jdbcType=VARCHAR}
+		 </foreach>
+	</select>
+	
+	
+	<!-- 王培源 -->
+	<!-- 指定uuid删除 -->
+	<delete id="deletCollectmoney">
+	 	delete from collectmoney where
+		uuid=#{uuid}
+	</delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.TaxDiscMapper">
+	<!-- 通过用户类型和户型获取ID -->
+	<select id="getIdByCondition" resultType="int">
+		select taxDiscId from taxDisc 
+		where userType=#{userType,jdbcType=VARCHAR} 
+		and taxDiscType=#{taxDiscType,jdbcType=VARCHAR}
+	</select>
+	<!-- 通过用户类型获取价格 -->	
+	<select id="getPriceByCondition" resultType="double">
+		select price from taxDisc 
+		where userType=#{userType,jdbcType=VARCHAR} 
+		and taxDiscType=#{taxDiscType,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 通过Id获取税控盘类型和价格 -->
+	<select id="getTaxDiscById" parameterType="int" resultType="taxDisc">
+		select userType,taxDiscType,price from taxDisc
+		where taxDiscId=#{taxDiscId}
+	</select>
+</mapper>

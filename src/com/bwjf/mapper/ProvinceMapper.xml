@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.ProvinceMapper">
+	<!-- 获取所有的相关信息 -->
+	<select id="getAllName" parameterType="int" resultType="String">
+		select name from province where status=#{status}
+	</select>
+	<!-- 获取id通过名字 -->
+	<select id="getIdByName" parameterType="String" resultType="int">
+		select provinceId from province where name=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	<!-- 通过id获取名字 -->
+	<select id="getNameById" parameterType="int" resultType="String">
+		select name from province where provinceId=#{provinceId}
+	</select>
+</mapper>

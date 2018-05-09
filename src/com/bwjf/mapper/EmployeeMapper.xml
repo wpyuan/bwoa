@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.EmployeeMapper">
+	<!-- 获取员工的姓名通过ID -->
+	<select id="getNameById" parameterType="int" resultType="String">
+		select name from employee where employeeId=#{employeeId}
+	</select>
+	<!-- 获取所有的员工信息 -->
+	<select id="getEmployee" resultType="employee">
+		select employeeId,name,phone,nowJob,hireDate,address from employee
+	</select>
+	<!-- 获取员工详细信息通过ID -->
+	<select id="getEmployeeDetailById" parameterType="int" resultType="employee">
+		select * from employee where employeeId=#{employeeId}
+	</select>
+	<!-- 获取员工部门Id -->
+	<select id="getDepartmentIdById" parameterType="int" resultType="int">
+		select departmentId from employee where employeeId=#{employeeId}
+	</select>
+	<!-- 更新用户  -->
+	<update id="updateEmployeeById" parameterType="employee">
+		update employee
+		<set>
+			<if test="name!=null">name=#{name},</if>
+			<if test="idCard!=null">idCard=#{idCard},</if>
+			<if test="phone!=null">phone=#{phone},</if>
+			<if test="address!=null">address=#{address},</if>
+			<if test="lastJob!=null">lastJob=#{lastJob},</if>
+			<if test="nowJob!=null">nowJob=#{nowJob},</if>
+			<if test="nativePlace!=null">nativePlace=#{nativePlace},</if>
+			<if test="educational!=null">educational=#{educational},</if>
+			<if test="departmentId!=0">departmentId=#{departmentId},</if>
+			<if test="hireDate!=null">hireDate=#{hireDate},</if>
+			<if test="email!=null">email=#{email},</if>
+			<if test="sex!=null">sex=#{sex},</if>
+			<if test="nation!=null">nation=#{nation},</if>
+			<if test="birthday!=null">birthday=#{birthday},</if>
+			<if test="politicsStatus!=null">politicsStatus=#{politicsStatus},</if>
+			<if test="workDate!=null">workDate=#{workDate},</if>
+			<if test="specialty!=null">specialty=#{specialty},</if>
+			<if test="familyRelationships!=null">familyRelationships=#{familyRelationships},</if>
+			<if test="socialRelations!=null">socialRelations=#{socialRelations},</if>
+			<if test="resume!=null">resume=#{resume},</if>
+			<if test="remark!=null">remark=#{remark},</if>
+			<if test="probationPeriod!=null">probationPeriod=#{probationPeriod},</if>
+			<if test="positivePhase!=null">positivePhase=#{positivePhase},</if>
+			<if test="graduationDate!=null">graduationDate=#{graduationDate},</if>
+			<if test="status!=null">status=#{status}</if>			
+		</set>
+		where employeeId=#{employeeId}
+	</update>
+	<!-- 更新员工状态信息 -->
+	<update id="deleteEmployeeById" parameterType="int">
+		update employee set status=0 where employeeId=#{employeeId}
+	</update>
+	<!-- 保存员工信息 -->
+	<insert id="saveEmployee" parameterType="employee">
+		insert into 
+		employee(name,idCard,phone,address,lastJob,nowJob
+		,nativePlace,educational,departmentId,hireDate,email,sex,nation
+		,birthday,politicsStatus,workDate,specialty,familyRelationships
+		,socialRelations,resume,remark,probationPeriod,positivePhase
+		,graduationDate,status)
+		values(#{name},#{idCard},#{phone},#{address},#{lastJob},#{nowJob},
+		#{nativePlace},#{educational},#{departmentId},#{hireDate,jdbcType=DATE},#{email,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},#{nation},		
+		#{birthday,jdbcType=DATE},#{politicsStatus},#{workDate,jdbcType=DATE},#{specialty,jdbcType=VARCHAR},#{familyRelationships,jdbcType=VARCHAR},
+		#{socialRelations,jdbcType=VARCHAR},#{resume},#{remark},#{probationPeriod,jdbcType=DATE},#{positivePhase,jdbcType=DATE},
+		#{graduationDate,jdbcType=DATE},#{status})		
+	</insert>
+	<!-- 搜索员工信息 -->
+	<select id="searchEmployeeByName" resultType="employee" parameterType="String">	
+		select employeeId,name,phone,nowJob,hireDate,address from employee where name like '%${_parameter}%'		
+	</select>
+	<!-- 搜索员工信息 -->
+	<select id="searchEmployeeByJob" resultType="employee" parameterType="String">	
+		select employeeId,name,phone,nowJob,hireDate,address from employee where nowJob like '%${_parameter}%'		
+	</select>
+	<!-- 搜索员工信息 -->
+	<select id="searchEmployeeByPhone" resultType="employee" parameterType="String">	
+		select employeeId,name,phone,nowJob,hireDate,address from employee where phone like '%${_parameter}%'		
+	</select>
+	<!-- 通过身份证号获取用户ID -->
+	<select id="getEmployeeIdByCard" parameterType="String" resultType="int">
+		select employeeId from employee where idCard=#{idCard}
+	</select>
+	
+	
+	<!-- 王培源 -->
+	<!-- 根据工号查询单个员工信息 -->
+ 	<select id="getEmployeeById" parameterType="int" resultType="Employee">
+ 		select employeeid,name from employee where employeeid=#{employeeId}
+ 	</select>
+ 	
+ 	<!-- 根据名字模糊查员工信息 -->
+ 	<select id="getEmployeeByName" parameterType="String" resultType="Employee">
+ 		select employeeid,name from employee where name like '%${_parameter}%'
+ 	</select>
+ 	
+ 	<!-- 根据姓名查询一个同名list -->
+ 	<select id="getOneEmployeeByName" parameterType="String" resultType="Employee"> 
+ 		select employeeid from employee where name=#{name}
+ 	</select>
+ 	
+</mapper>

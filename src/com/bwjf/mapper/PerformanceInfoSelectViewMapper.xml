@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.PerformanceInfoSelectViewMapper">	
+<!-- 管理员绩效查询 -->
+<select id="search" parameterType="String" resultType="PerformanceInfoSelectView">
+select * from(
+select case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.dataDate 
+else T4.dataDate
+end
+)
+else T3.dataDate
+end
+)
+else T2.dataDate
+end
+)
+else T1.dataDate
+end as dataDate,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.areaName 
+else T4.areaName
+end
+)
+else T3.areaName
+end
+)
+else T2.areaName
+end
+)
+else T1.areaName
+end as areaName,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.employeeName 
+else T4.employeeName
+end
+)
+else T3.employeeName
+end
+)
+else T2.employeeName
+end
+)
+else T1.employeeName
+end as employeeName,
+T1.newSum,T2.serviceSum,T3.bspSum,T4.changeSum,T5.eqmSum,T0.revenue,T0.transfer,T0.uuid
+
+from(
+select c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from collectmoney c                                  
+group by c.revenue,c.transfer,c.uuid
+)T0
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as newSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.taxdiscid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T1 
+on T0.uuid = T1.uuid 
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as serviceSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.servicechargeid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T2
+on T0.uuid = T2.uuid 
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as bspSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.escalationtaxid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T3
+on T0.uuid = T3.uuid
+left join
+(
+select t.datadate as dataDate,ar.name as areaName,e.name as employeeName, sum(t.quantity) as changeSum,c.revenue,c.transfer,c.uuid as uuid  
+from employee e,taxdiscreplace t,collectmoney c,area ar,account a
+where e.employeeid = t.employeeid 
+and a.employeeid =e.employeeid 
+and a.areaid = ar.areaid
+
+and t.uuid = c.uuid
+GROUP BY t.datadate,c.revenue,c.transfer,e.name,c.uuid,ar.name
+)T4
+on T0.uuid = T4.uuid
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as eqmSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.equipmentid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T5
+on T0.uuid = T5.uuid
+order by dataDate desc)
+where dataDate>=to_date(#{startDate},'yyyy-mm-dd')
+and dataDate&lt;=to_date(#{endDate},'yyyy-mm-dd')
+</select>
+
+<!-- 员工绩效查询 -->
+<select id="searchForEmployee"  resultType="PerformanceInfoSelectView">
+select * from(
+select case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.dataDate 
+else T4.dataDate
+end
+)
+else T3.dataDate
+end
+)
+else T2.dataDate
+end
+)
+else T1.dataDate
+end as dataDate,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.areaName 
+else T4.areaName
+end
+)
+else T3.areaName
+end
+)
+else T2.areaName
+end
+)
+else T1.areaName
+end as areaName,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.employeeName 
+else T4.employeeName
+end
+)
+else T3.employeeName
+end
+)
+else T2.employeeName
+end
+)
+else T1.employeeName
+end as employeeName,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.eId 
+else T4.eId
+end
+)
+else T3.eId
+end
+)
+else T2.eId
+end
+)
+else T1.eId
+end as eId,
+T1.newSum,T2.serviceSum,T3.bspSum,T4.changeSum,T5.eqmSum,T0.revenue,T0.transfer,T0.uuid
+
+from(
+select c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from collectmoney c                                  
+group by c.revenue,c.transfer,c.uuid
+)T0
+left join
+(
+select p.employeeid as eId,p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as newSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.taxdiscid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid,p.employeeid
+)T1 
+on T0.uuid = T1.uuid 
+left join
+(
+select p.employeeid as eId,p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as serviceSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.servicechargeid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid,p.employeeid
+)T2
+on T0.uuid = T2.uuid 
+left join
+(
+select p.employeeid as eId,p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as bspSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.escalationtaxid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid,p.employeeid
+)T3
+on T0.uuid = T3.uuid
+left join
+(
+select t.employeeid as eId,t.datadate as dataDate,ar.name as areaName,e.name as employeeName, sum(t.quantity) as changeSum,c.revenue,c.transfer,c.uuid as uuid  
+from employee e,taxdiscreplace t,collectmoney c,area ar,account a
+where e.employeeid = t.employeeid 
+and a.employeeid =e.employeeid 
+and a.areaid = ar.areaid
+
+and t.uuid = c.uuid
+GROUP BY t.datadate,c.revenue,c.transfer,e.name,c.uuid,ar.name,t.employeeid
+)T4
+on T0.uuid = T4.uuid
+left join
+(
+select p.employeeid as eId,p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as eqmSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.equipmentid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid,p.employeeid
+)T5
+on T0.uuid = T5.uuid
+order by dataDate desc
+)
+where dataDate>=to_date(#{start},'yyyy-mm-dd')
+and dataDate&lt;=to_date(#{end},'yyyy-mm-dd')
+and eId = #{employeeId}
+</select>
+
+<select id="searchByAreaName" resultType="PerformanceInfoSelectView">
+select * from(
+select case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.dataDate 
+else T4.dataDate
+end
+)
+else T3.dataDate
+end
+)
+else T2.dataDate
+end
+)
+else T1.dataDate
+end as dataDate,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.areaName 
+else T4.areaName
+end
+)
+else T3.areaName
+end
+)
+else T2.areaName
+end
+)
+else T1.areaName
+end as areaName,
+case 
+when T1.uuid is null then
+(
+case 
+when T2.uuid is null then 
+(
+case 
+when T3.uuid is null then 
+(
+case 
+when T4.uuid is null then T5.employeeName 
+else T4.employeeName
+end
+)
+else T3.employeeName
+end
+)
+else T2.employeeName
+end
+)
+else T1.employeeName
+end as employeeName,
+T1.newSum,T2.serviceSum,T3.bspSum,T4.changeSum,T5.eqmSum,T0.revenue,T0.transfer,T0.uuid
+
+from(
+select c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from collectmoney c                                  
+group by c.revenue,c.transfer,c.uuid
+)T0
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as newSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.taxdiscid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T1 
+on T0.uuid = T1.uuid 
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as serviceSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.servicechargeid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T2
+on T0.uuid = T2.uuid 
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as bspSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+
+and p.escalationtaxid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T3
+on T0.uuid = T3.uuid
+left join
+(
+select t.datadate as dataDate,ar.name as areaName,e.name as employeeName, sum(t.quantity) as changeSum,c.revenue,c.transfer,c.uuid as uuid  
+from employee e,taxdiscreplace t,collectmoney c,area ar,account a
+where e.employeeid = t.employeeid 
+and a.employeeid =e.employeeid 
+and a.areaid = ar.areaid
+
+and t.uuid = c.uuid
+GROUP BY t.datadate,c.revenue,c.transfer,e.name,c.uuid,ar.name
+)T4
+on T0.uuid = T4.uuid
+left join
+(
+select p.datatime as dataDate,ar.name as areaName,e.name as employeeName,sum(p.quantity) as eqmSum,c.revenue as revenue,c.transfer as transfer,c.uuid as uuid
+from performanceinfo p,account a,area ar,employee e,collectmoney c                                  
+where p.employeeid=a.employeeid and a.areaid=ar.areaid and e.employeeid = a.employeeid and c.uuid = p.uuid 
+
+and p.equipmentid is not null
+group by p.datatime,ar.name,e.name,c.revenue,c.transfer,c.uuid
+)T5
+on T0.uuid = T5.uuid
+order by dataDate desc)
+where dataDate>=to_date(#{startDate},'yyyy-mm-dd')
+and dataDate&lt;=to_date(#{endDate},'yyyy-mm-dd')
+and areaName = #{areaName}
+</select>
+
+</mapper>

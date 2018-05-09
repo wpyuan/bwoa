@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.AsccMapper">	
+	<!-- 通过年份获取户数 -->
+	<select id="getNumberByYear" resultType="Integer">
+		select householdNumber from ascc 
+		where year=#{year} and 
+		areaId=#{areaId,jdbcType=INTEGER}
+	</select>
+	<!-- 保存年应收服务费信息 -->
+	<insert id="saveAscc" parameterType="ascc">
+		insert into Ascc (year,householdNumber,areaId,createDate,createBy)
+		values(#{year},#{householdNumber},#{areaId},#{createDate},#{createBy})
+	</insert>
+	<!-- 获取显示视图通过年份 -->
+	<select id="getAsccViewByYear" parameterType="String" resultType="asccView">
+		select asccId,year,householdNumber,areaId,createDate,createby
+    	from ascc where year=#{_parameter}
+	</select>
+	
+	<!-- 获取修改信息 -->
+	<select id="getAsccById" parameterType="int" resultType="ascc">
+		select asccId,year,householdNumber,areaId
+    	from ascc where asccId=#{asccId}
+	</select>
+	
+	<!-- 更新信息 -->
+	<update id="updateAscc">
+		update ascc set householdNumber=#{number}
+		where asccId=#{asccId}
+	</update>
+	
+	<!-- 删除信息 -->
+	<delete id="deleteById" parameterType="int">
+		delete from ascc where asccId=#{asccId}
+	</delete>
+	
+	<!-- 获取总部记录信息 -->
+	<select id="getFirstViewByYear" resultType="asccView">
+		select * from ascc where year=#{year} and areaId=#{areaId}
+	</select>
+</mapper>

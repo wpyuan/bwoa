@@ -1,0 +1,26 @@
+@charset "UTF-8";
+.box {
+	width: 300px;
+	margin-top: 5px;
+	margin: left;
+	padding: 10px;
+	height: 80px;
+	border: 0px solid #c1d3de;
+	display: none; /* 默认对话框隐藏 */
+}
+
+.box.show {
+	display: block;
+}
+
+.box .x {
+	font-size: 12px;
+	text-align: right;
+	display: block;
+}
+
+.box input {
+	width: 80%;
+	font-size: 12px;
+	margin-top: 5px;
+}

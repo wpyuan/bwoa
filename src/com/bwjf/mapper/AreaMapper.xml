@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.AreaMapper">
+	<!-- 查询所有区域信息 -->
+	<select id="getAllArea" resultType="area">
+		select areaId,name,parentId,link,description from area where status=#{status} order by areaId asc
+	</select>
+	<!-- 联级的删除区域根据ID -->
+	<delete id="deleteById" parameterType="int">
+		delete from area where areaId=#{areId}
+	</delete>
+	<!-- 更新节点是否有效字段 -->
+	<update id="updateById">
+		update area set status=#{status,jdbcType=INTEGER} where areaId=#{areaId,jdbcType=INTEGER}
+	</update>
+	<!-- 得到父节点的信息 -->
+	<select id="getAreaByParentId" parameterType="int" resultType="int">
+		select areaId from area where parentId=#{parentId}
+	</select>
+	
+	<!-- 查询区域详细信息 -->
+	<select id="getAreaById" parameterType="int" resultType="area">
+		select * from area where areaId=#{areaId}
+	</select>
+	<!-- 获取区域名称通过ID -->
+	<select id="getNameById" parameterType="int" resultType="String">
+		select name from area where areaId=#{areaId}
+	</select>
+	
+	<!-- 保存区域信息 -->
+	<insert id="saveArea" parameterType="area">
+		insert into area
+		(cityId,createBy,createDate,description,name,parentId,provinceId,
+		regionLevel,status,townsId,updateBy,updateDate) 
+		values(#{cityId},#{createBy},#{createDate,jdbcType=DATE},
+		#{description},#{name},#{parentId},#{provinceId},
+		#{regionLevel},#{status},#{townsId,jdbcType=INTEGER},#{updateBy,jdbcType=VARCHAR},
+		#{updateDate,jdbcType=DATE})
+	</insert>
+	
+	<!-- 更新区域信息 -->
+	<update id="updateArea" parameterType="area">
+		update area
+		<set>
+			<if test="name!=null">name=#{name},</if>
+			<if test="provinceId!=0">provinceId=#{provinceId},</if>
+			<if test="cityId!=0">cityId=#{cityId},</if>			
+			<if test="regionLevel!=0">regionLevel=#{regionLevel,jdbcType=INTEGER},</if>
+			status=#{status},			
+			<if test="townsId!=0">townsId=#{townsId},</if>			
+			<if test="description!=null">description=#{description},</if>
+			updateDate=#{updateDate},
+			updateBy=#{updateBy}		
+		</set>
+		where areaId=#{areaId}
+	</update>
+	
+	<!-- 获取区域ID通过名字 -->
+	<select id="getIdByName" parameterType="String" resultType="int">
+		select areaId from area where name=#{_parameter}
+	</select>	
+	
+	
+	<!-- 更新区域链接 -->
+	<update id="updateLinkById">
+		update area set link=#{link,jdbcType=VARCHAR} 
+		where areaId=#{areaId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 获取指定名称的记录条数 -->
+	<select id="getCountByName" parameterType="String" resultType="int">
+		select count(*) from area where name=#{_parameter}
+	</select>	
+	
+	<!--2017-11-22 条件查询区域信息 -->
+	<select id="getAreaByConditon" resultType="area">
+		select areaId,name,parentId,link,description from area 
+		where status=#{status} and description not like	'%${description}' order by areaId asc
+	</select>
+	
+	<!-- 获取所有父节点下面的子节点 -->
+	<select id="getAreaIdByHasParentId" resultType="Integer">
+		select areaId from area
+		where parentId in
+		 <foreach item="item" index="index" collection="parentIds"
+		      open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+	</select>
+	
+	<!-- 获取父节点下面的子节点, 筛选掉部门信息-->
+	<select id="getAreaByParentIdExceptDepart" resultType="Integer">
+		select areaId from area 
+		where status=#{status} and description not like	'%${description}'
+		and parentId=#{parentId}		 
+	</select>
+	
+	<!-- 2018/1/22 -->
+	<select id="getAreaByName" resultType="Area">
+		select areaId,parentId from area where name=#{_parameter}
+	</select>
+</mapper>

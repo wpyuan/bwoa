@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.AccountMapper">
+	<!-- 条件查询获取帐户信息 -->
+	<select id="getAcccountByConditions" resultType="account">
+		select * from account where accountId=#{accountId,jdbcType=VARCHAR} and status=#{status,jdbcType=INTEGER}
+	</select>
+	<!-- 更新员工帐户状态 信息-->
+	<update id="deleteAccountByEmployeeId" parameterType="int">
+		update account set status=0 where employeeId=#{employeeId}
+	</update>
+	<!-- 保存帐户信息 -->
+	<insert id="saveAccount" parameterType="account">
+		insert into account(accountId,areaId,createBy,createDate,employeeId,password,roleId)
+			values(#{accountId},#{areaId},#{createBy},#{createDate},#{employeeId},
+			#{password},#{roleId})
+	</insert>
+	<!-- 王培源 -->
+	<!-- 查询所有账户 -->
+ 	<select id="getAreaAccount" parameterType="int" resultType="Account">
+ 		select employeeid,roleid,areaid from account where areaid = #{areaId}
+ 	</select>
+ 	
+ 	<!-- 查询总行数 -->
+ 	<select id="getPage" resultType="int">
+ 		select count(1) from account
+ 	</select> 	
+	<!-- 查询区域内所有账号户 -->
+	<select id="getAccountList" parameterType="int" resultType="Account">
+		select employeeid,roleid,areaid from (select A.*,rownum rn from( select employeeid,roleid,areaid from account )A where rownum  &lt; (#{start}/10+1)*10+1 )where rn &gt; #{start}
+	</select>
+	
+	<!-- 获取帐户信息通过员工ID -->
+	<select id="getAccountByEmployeeId" parameterType="int" resultType="Account">
+		select employeeid,roleid,areaid from account where employeeid = #{employeeId}
+	</select>
+	
+	<!-- 根据工号获取区域id -->	
+	<select id="getAreaByEmployeeId" parameterType="int" resultType="int">
+		select areaid from account where employeeid = #{employeeId}
+	</select>
+		
+	<!-- 根据employeeid修改roleid -->
+	<update id="UpdateRole" parameterType="int" >
+		update account set roleid=#{roleId} where employeeid=#{employeeId}
+	</update>
+	
+	<!-- 根据员工id修改区域id -->
+	<update id="areaChange" parameterType="int" >
+		update account set areaid=#{areaId} where employeeid=#{employeeId}
+	</update>
+	<!-- 修改为默认角色 -->
+	<update id="updateRoleId" parameterType="int">
+		update account set roleid=60 where roleid=#{roleId}
+	</update>
+	
+	<!-- 郑森文 -->
+	<!-- 通过Id修改账号密码 -->
+	<update id="setPasswordById" parameterType="Account"> 
+		update account set password=#{password} where accountId=#{accountId}
+	</update>
+	
+	<!-- 通过区域ID获取员工ID -->
+	<select id="getEmployeeIdByAreaId" resultType="int">
+		select employeeId from account where areaId in
+		<foreach collection="areaIds" item="item" index="index"
+			open="(" separator="," close=")">
+				#{item}	
+		</foreach>		
+	</select>
+	
+	<!-- 通过员工ID更新状态信息 -->
+	<update id="updateStatusByEmployeeId">
+		update account set status=#{status} where employeeId=#{employeeId}
+	</update>
+</mapper>

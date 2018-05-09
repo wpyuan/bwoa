@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.ServiceChargeMapper">
+	<!-- 根据户型和盘型获取ID -->
+	<select id="getIdByCondition" resultType="int">
+		select serviceChargeId from serviceCharge where 
+		familyType=#{familyType,jdbcType=VARCHAR}
+		and plateType=#{plateType,jdbcType=VARCHAR}
+	</select>
+	<!-- 获取户型和盘型 -->
+	<select id="getServiceChargeById" parameterType="int" resultType="serviceCharge">
+		select familyType,plateType,price from serviceCharge where serviceChargeId=#{serviceChargeId}
+	</select>
+	
+	<!--2017-11-22  获取服务费记录通过盘类型 -->
+	<select id="getPriceByFamilyType" resultType="double">
+		select price from serviceCharge where 
+		familyType=#{familyType,jdbcType=VARCHAR}
+		and plateType=#{plateType,jdbcType=VARCHAR}
+	</select>
+</mapper>

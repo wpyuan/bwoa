@@ -1,0 +1,23 @@
+
+#div-left{	
+	position: absolute;
+	left: 150px;	
+}
+
+#div-rigth{	
+	position: absolute;
+	left: 650px;
+	top: 15%;	
+}
+
+#div-button-left{
+	position: absolute;
+	left: 150px;
+	top:  80%;
+}
+
+#div-button-right{
+	position: absolute;
+	top: 60%;
+	left: 650px;
+}

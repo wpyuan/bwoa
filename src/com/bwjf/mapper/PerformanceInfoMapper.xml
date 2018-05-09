@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.PerformanceInfoMapper">
+	<!-- 保存税控盘部分信息 -->
+	<insert id="saveTaxInfo" parameterType="performanceInfo">
+		insert into performanceInfo
+		(employeeId,taxDiscId,quantity,createDate,uuid,dataTime)
+		values(#{employeeId},#{taxDiscId},#{quantity},#{createDate},#{uuid},#{dataTime})
+	</insert>
+	<!-- 保存服务费部分信息 -->
+	<insert id="saveServiceChargeInfo" parameterType="performanceInfo">
+		insert into performanceInfo
+		(employeeId,serviceChargeId,quantity,createDate,uuid,dataTime)
+		values(#{employeeId},#{serviceChargeId},
+		#{quantity},#{createDate},#{uuid},#{dataTime})
+	</insert>
+	<!-- 保存报税盘部分信息 -->
+	<insert id="savaEscalationTaxInfo" parameterType="performanceInfo">
+		insert into performanceInfo
+		(employeeId,escalationTaxId,quantity,createDate,uuid,dataTime)
+		values(#{employeeId},#{escalationTaxId},
+		#{quantity},#{createDate},#{uuid},#{dataTime})
+	</insert>
+	
+	<!-- ********************************王培源********************************************* -->
+	<insert id="eqmAdd" parameterType="performanceInfo">
+		insert into performanceInfo
+		(employeeId,equipmentId,quantity,createDate,uuid,dataTime)
+		values(#{employeeId},#{equipmentId},
+		#{quantity},#{createDate},#{uuid},#{dataTime})
+	</insert>
+	
+	<!-- 2017-11-22获取所有税控盘的数量 -->
+	<select id="getTaxNumByTime" resultType="Integer">
+		select sum(quantity) from PerformanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')
+		and taxDiscId is not null
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 2017-11-24获取所有的服务费数量 -->
+	<select id="getServiceNumByTime" resultType="Integer">
+		select sum(quantity) from PerformanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')
+		and serviceChargeId is not null
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+		
+	
+	<!-- 2017-12-5获取目前年服务收取的服务费数量 -->
+	<select id="getYearServiceNumByTime" resultType="Integer">
+		select sum(quantity) from PerformanceInfo where dataTime
+		between to_date(#{startYear},'yyyy-MM-dd') 
+		and to_date(#{endYear},'yyyy-MM-dd')
+		and serviceChargeId is not null
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 2017-11-24获取所有的报税盘数量 -->
+	<select id="getEscalationNumByTime" resultType="Integer">
+		select sum(quantity)  from PerformanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')
+		and escalationTaxId is not null
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 2017-11-22获取所有通用设备的数量 -->
+	<select id="getEquipmentNumByTime" resultType="Integer">
+		select sum(quantity) from PerformanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')
+		and equipmentId is not null
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 2017-11-22获取UUID -->
+	<select id="getUUIDByCondition" resultType="String">
+		select distinct uuid from PerformanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')		
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>	
+	
+	<!-- 获取各类通用设备的数量 -->
+	<select id="getEquipmentViewByCondition" resultType="equipmentView">
+		select equipmentId,sum(quantity) total from performanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd') 
+		and equipmentId is not null 
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		group by equipmentId		
+	</select>
+	
+	
+	
+	<!-- 获取各类税控盘的数量 -->
+	<select id="getTaxViewByCondition" resultType="taxView">
+		select taxDiscId,sum(quantity) as total from performanceInfo where dataTime 
+		between to_date(#{startTime,jdbcType=DATE},'yyyy-MM-dd')
+		and to_date(#{endTime,jdbcType=DATE},'yyyy-MM-dd') 
+		and taxDiscId is not null 
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		group by taxDiscId		
+	</select>
+	
+	<!-- 获取各类服务费的数量 -->
+	<select id="getServiceViewByCondition" resultType="serviceView">
+		select serviceChargeId,sum(quantity) total from performanceInfo where dataTime 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd') 
+		and serviceChargeId is not null 
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		group by serviceChargeId		
+	</select>
+	
+	<!-- 获取折线图数据 2018-2-2-->
+	<select id="getChartDateByTime" resultType="Integer">
+		select sum(quantity) from performanceInfo where dataTime 
+		between to_date(#{startTime,jdbcType=DATE},'yyyy-MM-dd')
+		and to_date(#{endTime,jdbcType=DATE},'yyyy-MM-dd') 
+		and taxDiscId is not null 
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>		
+	</select>
+	
+	<!-- 王培源 -->
+	<!-- 修改界面数据显示 -->
+	<select id="toAlter" parameterType="String" resultType="PerformanceForm">
+		select distinct T0.DataDate,T0.AddTime,T1.XXZS,T2.XXZJ,T3.XXFS,T4.XXFJ,T5.XYZS,T6.XYZJ,T7.XYFS,T8.XYFJ,
+			T11.LZS,T12.LZJ,T13.LFS,T14.LFJ,T15.BSPS,T16.BSPJ,T17.SKPMFGH,T18.SKPYCGHS,T19.SKPYCGHJ,T20.ZXS,T21.YZZ,(T20.ZXS-T21.YZZ)as WZZ
+			from 
+			( select p.datatime as DataDate,p.createdate as AddTime,p.uuid as uuid from performanceinfo p where p.uuid = #{uuid} 
+			)T0,
+			( select sum(p.quantity) as XXZS from performanceinfo p where p.taxdiscid = 1 and p.uuid = #{uuid}
+			)T1,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 1))as XXZJ from performanceinfo p where p.taxdiscid = 1 and p.uuid = #{uuid}
+			)T2,
+			( select sum(p.quantity) as XXFS from performanceinfo p where p.taxdiscid = 2 and p.uuid = #{uuid}
+			)T3,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 2))as XXFJ from performanceinfo p where p.taxdiscid = 2 and p.uuid = #{uuid}
+			)T4,
+			( select sum(p.quantity) as XYZS from performanceinfo p where p.taxdiscid = 3 and p.uuid = #{uuid}
+			)T5,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 3))as XYZJ from performanceinfo p where p.taxdiscid = 3 and p.uuid = #{uuid}
+			)T6,
+			( select sum(p.quantity) as XYFS from performanceinfo p where p.taxdiscid = 4 and p.uuid = #{uuid}
+			)T7,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 4))as XYFJ from performanceinfo p where p.taxdiscid = 4 and p.uuid = #{uuid}
+			)T8,
+			( select sum(p.quantity) as LZS from performanceinfo p where p.servicechargeid = 3 and p.uuid = #{uuid}
+			)T11,
+			( select sum(p.quantity*(select price from servicecharge where servicechargeid = 3))as LZJ from performanceinfo p where p.servicechargeid = 3 and p.uuid = #{uuid}
+			)T12,
+			( select sum(p.quantity) as LFS from performanceinfo p where p.servicechargeid = 4 and p.uuid = #{uuid}
+			)T13,
+			( select sum(p.quantity*(select price from servicecharge where servicechargeid = 4))as LFJ from performanceinfo p where p.servicechargeid = 4 and p.uuid = #{uuid}
+			)T14,
+			( select sum(p.quantity) as BSPS from performanceinfo p where p.escalationtaxid = 1 and p.uuid = #{uuid}
+			)T15,
+			( select sum(p.quantity*(select price from escalationtax where escalationtaxid = 1))as BSPJ from performanceinfo p where p.escalationtaxid = 1 and p.uuid = #{uuid}
+			)T16,
+			( select sum(t.quantity) as SKPMFGH from taxdiscreplace t where t.replacetype = 0 and t.uuid = #{uuid}
+			)T17,
+			( select sum(t.quantity) as SKPYCGHS from taxdiscreplace t where t.replacetype = 1 and t.uuid = #{uuid}
+			)T18,
+			( select sum(t.price) as SKPYCGHJ from taxdiscreplace t where t.replacetype = 1 and t.uuid = #{uuid}
+			)T19,
+			( select c.revenue as ZXS from collectmoney c where  c.uuid = #{uuid}
+			)T20,
+			( select c.transfer as YZZ from collectmoney c where  c.uuid = #{uuid}
+			)T21
+	</select>
+	
+	<!-- 修改界面数据显示【只有税控盘更换】 -->
+	<select id="toAlterOnlyTaxdiscReplace" parameterType="String" resultType="PerformanceForm">
+		select distinct T0.dataDate,T0.addTime,T1.XXZS,T2.XXZJ,T3.XXFS,T4.XXFJ,T5.XYZS,T6.XYZJ,T7.XYFS,T8.XYFJ,
+			T11.LZS,T12.LZJ,T13.LFS,T14.LFJ,T15.BSPS,T16.BSPJ,T17.SKPMFGH,T18.SKPYCGHS,T19.SKPYCGHJ,T20.ZXS,T21.YZZ,(T20.ZXS-T21.YZZ)as WZZ
+			from 
+			( select t.datadate as dataDate,t.createtime as addTime from taxdiscreplace t where t.uuid = #{uuid} 
+			)T0,
+			( select sum(p.quantity) as XXZS from performanceinfo p where p.taxdiscid = 1 and p.uuid = #{uuid}
+			)T1,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 1))as XXZJ from performanceinfo p where p.taxdiscid = 1 and p.uuid = #{uuid}
+			)T2,
+			( select sum(p.quantity) as XXFS from performanceinfo p where p.taxdiscid = 2 and p.uuid = #{uuid}
+			)T3,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 2))as XXFJ from performanceinfo p where p.taxdiscid = 2 and p.uuid = #{uuid}
+			)T4,
+			( select sum(p.quantity) as XYZS from performanceinfo p where p.taxdiscid = 3 and p.uuid = #{uuid}
+			)T5,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 3))as XYZJ from performanceinfo p where p.taxdiscid = 3 and p.uuid = #{uuid}
+			)T6,
+			( select sum(p.quantity) as XYFS from performanceinfo p where p.taxdiscid = 4 and p.uuid = #{uuid}
+			)T7,
+			( select sum(p.quantity*(select price from taxdisc where taxdiscid = 4))as XYFJ from performanceinfo p where p.taxdiscid = 4 and p.uuid = #{uuid}
+			)T8,
+			( select sum(p.quantity) as LZS from performanceinfo p where p.servicechargeid = 3 and p.uuid = #{uuid}
+			)T11,
+			( select sum(p.quantity*(select price from servicecharge where servicechargeid = 3))as LZJ from performanceinfo p where p.servicechargeid = 3 and p.uuid = #{uuid}
+			)T12,
+			( select sum(p.quantity) as LFS from performanceinfo p where p.servicechargeid = 4 and p.uuid = #{uuid}
+			)T13,
+			( select sum(p.quantity*(select price from servicecharge where servicechargeid = 4))as LFJ from performanceinfo p where p.servicechargeid = 4 and p.uuid = #{uuid}
+			)T14,
+			( select sum(p.quantity) as BSPS from performanceinfo p where p.escalationtaxid = 1 and p.uuid = #{uuid}
+			)T15,
+			( select sum(p.quantity*(select price from escalationtax where escalationtaxid = 1))as BSPJ from performanceinfo p where p.escalationtaxid = 1 and p.uuid = #{uuid}
+			)T16,
+			( select sum(t.quantity) as SKPMFGH from taxdiscreplace t where t.replacetype = 0 and t.uuid = #{uuid}
+			)T17,
+			( select sum(t.quantity) as SKPYCGHS from taxdiscreplace t where t.replacetype = 1 and t.uuid = #{uuid}
+			)T18,
+			( select sum(t.price) as SKPYCGHJ from taxdiscreplace t where t.replacetype = 1 and t.uuid = #{uuid}
+			)T19,
+			( select c.revenue as ZXS from collectmoney c where  c.uuid = #{uuid}
+			)T20,
+			( select c.transfer as YZZ from collectmoney c where  c.uuid = #{uuid}
+			)T21
+	</select>
+
+
+	<!-- 修改界面设备销售数量显示 -->
+	<select id="getToAlterEqmNum" parameterType="String" resultType="String">
+	select T1.eqmNum
+from equipment e
+left join
+(
+select p.equipmentid as eId,p.quantity as eqmNum from performanceinfo p
+where p.equipmentid is not null 
+and p.uuid =#{uuid}
+)T1
+on T1.eId=e.equipmentid
+order by e.equipmentId asc
+	</select>
+
+	<!-- 检查是否有当天录入记录 -->
+	<select id="check" resultType="String">
+	select (count(1)+T1.num2) as num 
+	from performanceinfo p,
+	(
+	select count(1)as num2 from taxdiscreplace t 
+	where t.employeeid = #{employeeId} 
+	and t.datadate = to_date(#{dataDate},'yyyy-mm-dd')
+	)T1 
+	where p.employeeid = #{employeeId}  
+	and p.datatime = to_date(#{dataDate},'yyyy-mm-dd')
+	group by T1.num2
+	</select>
+
+	<!-- 指定uuid 删除performanceInfo -->
+	<delete id="deletPerformanceInfo">
+		delete from performanceInfo where
+		uuid=#{uuid}
+	</delete>
+	<!-- 根据uuid,查询绩效录入时间 -->
+	<select id="getCreateDate" parameterType="String" resultType="Date">
+		select distinct p.createdate from performanceinfo p where p.uuid = #{uuid}
+	</select>
+</mapper>

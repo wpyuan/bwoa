@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.TaxDiscReplaceMapper">	
+
+	<!-- 保存更换信息 -->
+	<insert id="saveTaxDiscReplace" parameterType="taxDiscReplace">
+		insert into taxDiscReplace
+		(replaceType,price,quantity,employeeId,uuid,dataDate,createTime)
+		values(#{replaceType},#{price},#{quantity},#{employeeId},#{uuid},#{dataDate},#{createTime})
+	</insert>
+	
+	<!-- 获取更换的税控盘数量  -->
+	<select id="getReplaceNumByTime" resultType="Integer">
+		select sum(quantity) from taxDiscReplace where dataDate 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')
+		and replaceType=#{replaceType}
+		and employeeId in
+		 <foreach item="item" index="index" collection="employeeIds"
+		      open="(" separator="," close=")">
+		        #{item}
+		  </foreach> 
+	</select>	
+	
+	<!-- 2017-11-22获取UUID -->
+	<select id="getUUIDByCondition" resultType="String">
+		select distinct uuid from taxDiscReplace where dataDate 
+		between to_date(#{startTime},'yyyy-MM-dd')
+		and to_date(#{endTime},'yyyy-MM-dd')		
+		and employeeId in
+		<foreach item="item" index="index" collection="employeeIds"
+      		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 王培源 -->
+	<!-- 指定uuid 删除 -->
+	<delete id="deletTaxdiscreplace">
+		delete from taxDiscReplace where
+		uuid=#{uuid}
+	</delete>
+	<!-- 指定uuid 获取创建时间 -->
+	<select id="getCreateDate" parameterType="String" resultType="Date">
+		select distinct t.createtime from taxdiscreplace t where t.uuid = #{uuid}
+	</select>
+</mapper>

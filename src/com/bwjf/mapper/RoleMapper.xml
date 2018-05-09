@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.RoleMapper">
+	<!-- 获取角色ID通过名字 -->
+	<select id="getIdByName" resultType="int" parameterType="String"> select
+		roleId from role where name=#{name} </select>
+	<!-- 搜索角色信息,当输入映射为单个的string类型时，参数使用 _parameter -->
+	<select id="searchRole" resultType="role" parameterType="String"> select
+		* from role where name like '%${_parameter}%' </select>
+
+	<!-- 王培源 -->
+	<!-- 查询所有角色 -->
+	<select id="getAllRole" resultType="Role">
+		select * from role
+	</select>
+
+	<!-- 根据id查询角色 -->
+	<select id="getRoleById" parameterType="int" resultType="Role">
+		select * from role where roleid = #{roleId}
+	</select>
+
+	<!-- 添加角色 -->
+	<insert id="add" parameterType="Role">
+		insert into role(name) values(#{name})
+	</insert>
+
+	<!-- 根据角色名查询 -->
+	<select id="getRoleByName" resultType="Role" parameterType="String">
+		select * from role where name = #{name}
+	</select>
+
+	<!-- 删除 -->
+	<update id="delet" parameterType="int">
+		delete from role where
+		roleid=#{roleId}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Role">
+		update role set name=#{name} where roleid=#{roleId}
+	</update>
+	
+	<!-- 根据角色名模糊查询 -->
+	<select id="getRoleByNameMH" resultType="Role" parameterType="String">
+		select * from role where name like '%${_parameter}%'
+	</select>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.AccountAreaEmployeeRoleViewMapper">
+	<!-- 查询当页角色分配视图 -->
+	<select id="getAccountAreaEmployeeRoleView" resultType="AccountAreaEmployeeRoleView">
+		select a.employeeid,e.name as employeeName,a.roleid,r.name as roleName,a.areaid,ar.name as areaName 
+		from account a,employee e,role r,area ar 
+		where a.employeeid=e.employeeid and a.roleid=r.roleid and a.areaid=ar.areaid
+	</select>
+	<!-- 模糊查询包含姓名字段的视图 -->
+	<select id="getAccountAreaEmployeeRoleViewByEmployeeName" parameterType="String" resultType="AccountAreaEmployeeRoleView">
+		select a.employeeid,e.name as employeeName,a.roleid,r.name as roleName,a.areaid,ar.name as areaName 
+		from account a,employee e,role r,area ar 
+		where a.employeeid=e.employeeid and a.roleid=r.roleid and a.areaid=ar.areaid and e.name like '%${_parameter}%'
+	</select>
+	<!-- 精确查询包含姓名字段的视图 -->
+	<select id="getAAERVByEName" parameterType="String" resultType="AccountAreaEmployeeRoleView">
+		select ar.areaid as areaId,ar.name as areaName,e.employeeid as employeeId,e.name as employeeName 
+		from account a,employee e,area ar
+		where a.employeeid=e.employeeid and ar.areaid=a.areaid and e.name=#{employeeName}
+	</select>
+	<!-- 查询包含地区id的视图 -->
+	<select id="getAccountAreaEmployeeRoleViewByAreaId" parameterType="int" resultType="AccountAreaEmployeeRoleView">
+		select a.employeeid,e.name as employeeName,a.roleid,r.name as roleName,a.areaid,ar.name as areaName 
+		from account a,employee e,role r,area ar 
+		where a.employeeid=e.employeeid and a.roleid=r.roleid and a.areaid=ar.areaid and ar.areaid=#{areaId}
+	</select>
+</mapper>

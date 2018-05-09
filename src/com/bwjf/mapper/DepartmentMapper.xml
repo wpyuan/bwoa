@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bwjf.mapper.DepartmentMapper">
+	<!-- 获取部门名称通过部门ID -->
+	<select id="getDepartmentNameById" parameterType="int" resultType="String">
+		select name from department where departmentId=#{departmentId}
+	</select>
+	<!-- 获取筛选条件下的部门名称 -->
+	<select id="getNameByFiltrate" resultType="String">
+		select name from department where status=#{status,jdbcType=INTEGER} and departmentId!=#{departmentId,jdbcType=INTEGER}
+	</select>
+	<!-- 获取部门的Id通过名字 -->
+	<select id="getIdByName" parameterType="String" resultType="Integer">
+		select departmentId from department where name=#{name}
+	</select>
+	
+	
+	
+	
+	<!-- 王培源 -->	
+	<!-- 查询所有部门信息 -->
+	<select id="getAllDepartment" resultType="Department" >
+		select * from department where status=1
+	</select>
+
+	<!-- 添加部门 -->
+	<insert id="add" parameterType="Department">
+		insert into department(name,status) values(#{name},#{status})
+	</insert>
+	
+	<!-- 根据部门名查部门是否存在 -->
+	<select id="getDepartmentByName" parameterType="String" resultType="Department">
+		select * from department where name=#{name}
+	</select>
+	
+	<!-- 根据部门名模糊查询 -->
+	<select id="getDepartmentByNameMH" parameterType="String" resultType="Department">
+		select * from department where name like '%${_parameter}%' and status=1
+	</select>
+	
+	<!-- 根据部门id删除部门 -->
+	<update id="delet" parameterType="int">
+		update department set status=0 where departmentid=#{departmentId}
+	</update>
+	
+	<!-- 根据部门id设置状态 -->
+	<update id="update" parameterType="Department">
+		update department set name=#{name},status=#{status} where departmentid=#{departmentId}
+	</update>
+	
+	<!-- 根据部门id查询 -->
+	<select id="getDepartmentById" parameterType="int" resultType="Department">
+		select * from department where departmentid=#{departmentId}
+	</select>
+</mapper>
