@@ -30,7 +30,7 @@
 	.case{margin-top: 15px}
 	.ECalendar{width:400px;height:30px;}
 </style>
-<script src="js/jquery.min.js"></script>
+<!-- <script src="js/jquery.min.js"></script>  -->
 <script src="js/Ecalendar.jquery.min.js"></script>
 <script type="text/javascript">
 var isFirst = true;   
@@ -403,8 +403,8 @@ function showArea(){
 
 <script type="text/javascript">
 	$('select').iSelect();
-</script>
-<script src="js/jquery-1.10.2.js"></script>
+</script> 
+<!-- <script src="js/jquery-1.10.2.js"></script>  -->
 <script src="js/area.js"></script>
 <script src="js/select.js"></script>
 </html>

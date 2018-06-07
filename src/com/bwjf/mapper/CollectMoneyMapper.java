@@ -21,9 +21,10 @@ public interface CollectMoneyMapper {
 	 * @方法描述:统计总金额,已转金额
 	 */
 	public double getTotalMoneyByUUID(@Param("uuids")List<String> uuids) throws Exception;
+	public double getTotalMoneyByuuid(@Param("uuids")List<String> uuids) throws Exception;
 	
 	public double getTransferMoneyByUUID(@Param("uuids")List<String> uuids) throws Exception;
-	
+	public double getTransferMoneyByuuid(@Param("uuids")List<String> uuids) throws Exception;
 	/*
 	 * @作者:王培源
 	 * 

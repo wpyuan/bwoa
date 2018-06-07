@@ -471,9 +471,10 @@ public class PerformanceInfoServiceImpl implements PerformanceInfoService {
 		uuidTwo.removeAll(uuidOne);
 		uuidTwo.addAll(uuidOne);
 		if(uuidTwo.size()!=0){
-			total+=collectMoneyMapper.getTotalMoneyByUUID(uuidTwo);		
-			hasHandIn+=collectMoneyMapper.getTransferMoneyByUUID(uuidTwo);
-			
+			//total+=collectMoneyMapper.getTotalMoneyByUUID(uuidTwo); //zgy
+			//hasHandIn+=collectMoneyMapper.getTransferMoneyByUUID(uuidTwo);//zgy
+			total+=collectMoneyMapper.getTotalMoneyByuuid(uuidTwo); //wpy 20180606 update
+			hasHandIn+=collectMoneyMapper.getTransferMoneyByuuid(uuidTwo);//wpy 20180606 update
 			statisticalView.setTotalSalesAmount(total);
 			statisticalView.setHasHandIn(hasHandIn);
 			//判断结果是否大于零，如果小于则为默认值零

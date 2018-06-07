@@ -26,7 +26,9 @@ function selectMonth(years,month,day){
 		url:"/oa/performanceInfo/getChartDate.do?year="+year+"&month="+month+"&day="+day+"&areaName="+areaName,
 		type:"post",
 		dataType:"",
-		success : function(result){			
+		success : function(result){	
+			//console.log("result="+result);
+			//console.log("max="+Math.max.apply(null, result));
 			if(result!=""){
 				 var ctx = document.getElementById("myChart").getContext('2d');
 					var myChart = new Chart(ctx, {
@@ -51,16 +53,17 @@ function selectMonth(years,month,day){
 					        scales: {
 					            yAxes: [{
 					                ticks: {
-					                    max: 150,
-					                    mix: 0,
-					                    stepSize: 10					                    
+					                    //max: 150,
+					                    max: Math.ceil(new Number(Math.max.apply(null, result))/10)*10,
+					                	mix: 0,
+					                    stepSize: Math.ceil(new Number(Math.max.apply(null, result))/10)					                    
 					                }
 					            }]
 					        }
 					    }
 					    
 					});
-					
+							
 			//设置时间
 			document.getElementById("year").innerHTML=year+"年"+month+"月";		
 								

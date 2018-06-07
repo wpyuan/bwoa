@@ -10,7 +10,7 @@
 		values(#{uuid},#{revenue},#{Transfer})
 	</insert>
 	
-	<!-- 获取总金额额， -->
+	<!-- 获取总金额额， zgy-->
 	<select id="getTotalMoneyByUUID" resultType="double">
 		select sum(revenue) from collectMoney
 		where uuid in
@@ -19,8 +19,18 @@
 		        #{item,jdbcType=VARCHAR}
 		 </foreach>
 	</select>
-	
-	<!-- 获取总已转账金额 -->
+	<!-- 获取总金额，wpy 20180606-->
+	<select id="getTotalMoneyByuuid" resultType="double">
+		<!-- select revenue from collectMoney
+		where uuid = #{uuid}  -->
+		select sum(revenue) from collectMoney
+		where 
+		 <foreach item="item" index="index" collection="uuids"
+		      open="(" separator="or" close=")">
+		        uuid = #{item,jdbcType=VARCHAR}
+		 </foreach>
+	</select>
+	<!-- 获取总已转账金额， zgy -->
 	<select id="getTransferMoneyByUUID" resultType="double">
 		select sum(Transfer) from collectMoney
 		where uuid in
@@ -29,7 +39,17 @@
 		        #{item,jdbcType=VARCHAR}
 		 </foreach>
 	</select>
-	
+	<!-- 获取总已转账金额，wpy 20180606-->
+	<select id="getTransferMoneyByuuid" resultType="double">
+		<!-- select Transfer from collectMoney
+		where uuid = #{uuid}  -->
+		select sum(Transfer) from collectMoney
+		where 
+		 <foreach item="item" index="index" collection="uuids"
+		      open="(" separator="or" close=")">
+		        uuid = #{item,jdbcType=VARCHAR}
+		 </foreach>
+	</select>
 	
 	<!-- 王培源 -->
 	<!-- 指定uuid删除 -->

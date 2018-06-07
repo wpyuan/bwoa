@@ -144,10 +144,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if(employee.getAddress()!=null){
 			//格式化显示地址
 			String s[]=employee.getAddress().split("\\-");
-			list.add(s[0]);
-			list.add(s[1]);
-			list.add(s[2]);
-			list.add(s[3]);
+			/*    wpy update  20180606  */
+			/*    解决点击员工查看、修改，提示“服务器出错”bug  */
+			for (int i = 0; i < s.length; i++) {
+				if (!s[i].equals("")) {
+					list.add(s[i]);
+				}
+			}
+			////////////zgy code///////////////
+//			list.add(s[0]);
+//			list.add(s[1]);
+//			list.add(s[2]);
+//			list.add(s[3]);
+			///////////////////////////
 		}
 		
 		//将数据放到集合中返回

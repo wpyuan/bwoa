@@ -94,6 +94,7 @@
 	$(function($) {
 
 		$.fn.zTree.init($("#treeDemo"), setting);
+		
 	});
 
 	//节点点击事件
@@ -119,7 +120,12 @@
 		//alert('加载树成功');
 		var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
 		//设置展开根节点,默认不展开
-		// treeObj.expandAll(true);
+		//treeObj.expandAll(true);
+		//默认展开二级菜单
+		var nodes = treeObj.getNodes();
+		for (var i = 0; i < nodes.length; i++) { //设置节点展开
+            treeObj.expandNode(nodes[i], true, false, true);
+        }
 
 	}
 

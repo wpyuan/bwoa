@@ -231,6 +231,7 @@ function selectClear(years,month,day){
 			if(result=="success"){
 				var timeYear=encodeURI(years.innerHTML.substring(0, 5)+month+"月");
 				timeYear=encodeURI(timeYear);	
+				
 				window.location.href='/oa/performanceInfo/selectResult.do?year='+timeYear+"&falg=true";	
 								
 			}else{

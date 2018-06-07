@@ -3597,6 +3597,7 @@ module.exports = function(Chart) {
 				// This can happen when processing mouse events, e.g. 'mousemove'
 				// and 'mouseout' events will trigger multiple renders.
 				me.request = helpers.requestAnimFrame.call(window, function() {
+					//console.log("mouse0");/* wpy */
 					me.request = null;
 					me.startDigest();
 				});
@@ -5446,7 +5447,9 @@ module.exports = function(Chart) {
 			mouseX = e.clientX;
 			mouseY = e.clientY;
 		}
-
+		
+		//console.log("mouse1");/*wpy */
+		
 		// Scale mouse coordinates into canvas coordinates
 		// by following the pattern laid out by 'jerryj' in the comments of
 		// http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
